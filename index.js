@@ -30,7 +30,7 @@ app.use(cors());
 //Route
 app.use('/api/', emailer);
 app.use('/api/posts', servicesRoute);
-app.use('/api/', blog);
+app.use('/api/blog', blog);
 app.use('/api/', paginate);
 app.use('/api/', addStudent);
 app.use('/api/', addTrainer);
