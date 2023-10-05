@@ -16,6 +16,7 @@ const paginate = require('./Routes/paginates');
 const addAdmin = require('./Routes/admin');
 const allAction = require('./Routes/notice')
 const blog = require('./Routes/blog')
+const fileUploads = require('./Routes/upload')
 
 const app = express()
 
@@ -34,10 +35,11 @@ app.use('/api/blog', blog);
 app.use('/api/', paginate);
 app.use('/api/', addStudent);
 app.use('/api/', addTrainer);
-app.use('/api/', addAdmin)
+app.use('/api/', addAdmin);
 app.use('/api/', studentReg);
 app.use('/api/', trainerReg);
 app.use('/api/', allAction);
+app.use('/api/', fileUploads)
 
 
 
