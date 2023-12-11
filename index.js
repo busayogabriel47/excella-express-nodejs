@@ -2,7 +2,8 @@ const express = require('express')
 
 const cors = require('cors');
 const { mongoose } = require('mongoose');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
+const cohort = require('./Model/cohort')
 
 
 const multer = require('multer');
@@ -14,9 +15,12 @@ const studentReg = require('./Routes/studentReg')
 const trainerReg = require('./Routes/trainerReg')
 const paginate = require('./Routes/paginates');
 const addAdmin = require('./Routes/admin');
+const userDetails = require('./Routes/userDetails')
 const allAction = require('./Routes/notice')
 const blog = require('./Routes/blog')
-const fileUploads = require('./Routes/upload')
+const fileUploads = require('./Routes/upload');
+const emailMiddleware = require('./middleware/emailMiddleware');
+const trainerDashboardbRoute = require ('./Routes/addTrainer');
 
 const app = express()
 
@@ -26,7 +30,8 @@ app.use(bodyParser.json({limit: "30mb", extended: true}))
 app.use(bodyParser.urlencoded({limit: "30mb", extended: true}));
 app.use(cors());
 
-
+//middleware
+app.use(emailMiddleware)
 
 //Route
 app.use('/api/', emailer);
@@ -40,6 +45,16 @@ app.use('/api/', studentReg);
 app.use('/api/', trainerReg);
 app.use('/api/', allAction);
 app.use('/api/', fileUploads)
+app.use('/api/', userDetails)
+app.use('/api/', trainerDashboardbRoute)
+
+
+// const newCohort = new cohort({
+//     name: "NCLEX Beginners 1",
+//     formUrl: "outhutheougeoueutoeu"
+// })
+
+// newCohort.save()
 
 
 

@@ -3,24 +3,18 @@ const router = express.Router();
 const dotenv = require('dotenv').config()
 const adminModel = require('../Model/admin');
 const nodemailer = require('nodemailer');
-const requireLogin = require('../middleware/requireLogin')
-const sendGridTransport = require('nodemailer-sendgrid-transport')
+const emailMiddleware = require("../middleware/emailMiddleware")
+const adminLogin = require("../middleware/adminLogin")
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
 
-const transporter = nodemailer.createTransport(
-    sendGridTransport({
-      auth: {
-        api_key: "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",
-      },
-    })
-  );
+
 
 
 const regAdmin = (req,res)=>{
-    const {firstname,lastname, email,password,pic,phone,city,branch, isAdmin} = req.body 
+    const {firstname,lastname, email,password,pic,phone,city, role} = req.body 
  //   console.log(req.body )
-   if(!email || !password || !firstname || !phone || !city || !branch, !isAdmin){
+   if(!email || !password || !firstname || !phone || !city || !role){
       return res.status(422).json({error:"please add all the fields"})
    }
    adminModel.findOne({email:email})
@@ -31,23 +25,22 @@ const regAdmin = (req,res)=>{
        bcrypt.hash(password,12)
        .then(hashedpassword=>{
              const admin = new adminModel({
-                 email,phone,city,branch,
+                 email,phone,city,
                  password:hashedpassword,
                  firstname,lastname,
-                 pic, isAdmin
+                 pic, role
              })
      
              admin.save()
-             .then(user=>{
-                 transporter.sendMail({
-                     from: "mahenmondal111@gmail.com", // sender address
-                     to: user.email, // list of receivers
-                     subject: "E-voting Registration", // Subject line
-                     html:
-                       " You sucessfully complete Your  registration for E-voting.", // html body
-                   });
-                 res.json({message:"saved successfully"})
-             })
+             .then(user => {
+              emailMiddleware({
+                  from: "omotukabusayo22@gmail.com",
+                  to: user.email,
+                  subject: "Excella registration",
+                  html: "You successfully completed your registration as Admin on Excella",
+              });
+              res.json({ message: "Registration is successful" });
+          })
              .catch(err=>{
                  console.log(err)
              })
@@ -60,7 +53,7 @@ const regAdmin = (req,res)=>{
  }
 
 
-
+//Login admin
 const loginAdmin = (req,res)=>{
     const {email,password} = req.body
     console.log(req.body)
@@ -77,8 +70,8 @@ const loginAdmin = (req,res)=>{
             if(doMatch){
                 // res.json({message:"successfully signed in"})
                const token = jwt.sign({_id:savedUser._id},process.env.JWT_SECRET)
-               const {_id, firstname,lastname,email,pic,phone,branch,isAdmin, city} = savedUser
-               res.json({token,user:{_id, firstname,lastname,email,pic,phone,city,branch,isAdmin}})
+               const {_id, firstname,lastname,email,pic,phone, role, city} = savedUser
+               res.json({token,user:{_id, firstname,lastname,email,pic,phone,city,role}})
             }
             else{
                 return res.status(422).json({error:"Invalid Email or password"})

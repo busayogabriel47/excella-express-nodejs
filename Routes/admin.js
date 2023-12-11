@@ -4,6 +4,7 @@ const create = require('../controller/admin')
 
 
 
+
   
 router.post('/adminReg', create.regAdmin)
 

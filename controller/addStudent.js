@@ -3,37 +3,29 @@ const router = express.Router()
 const usermodel = require('../Model/addStudent')
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
-const sendGridTransport = require('nodemailer-sendgrid-transport')
 const env = require('dotenv');
 const jwt = require("jsonwebtoken");
 const addStudent = require('../Model/addStudent');
+const emailMiddleware = require('../middleware/emailMiddleware');
 
 env.config()
 
-const transporter = nodemailer.createTransport(
-    sendGridTransport({
-        auth: {
-            api_key: "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"
-        }
-    })
-)
+
 
 
 
 //Register
-
 const register = (req, res)=> {
-    //1. Get all input from req.body
+    //1. Get all data from req.body
     const {firstname, 
         lastname, email, 
-        password, phone, dob, cohort, 
-        course, pic, class_No} = req.body
+        password, phone, dob, 
+        course,} = req.body
 
-    // //2. backend validation
-    // if(!firstname || !lastname || !email || !password || !age || !gender || !address
-    //     || !phone || !course || !dob || !isAdmin || !cohort || !picture){
-    //         return res.status(422).json({error: "All fields are required!"})
-    //     }
+    //2. backend validation.. Check if all required fields are provided.
+    if(!firstname || !lastname || !email || !password || !dob || !phone || !course){
+            return res.status(422).json({error: "All fields are required!"})
+        }
 
     //3. Check for existing email
     usermodel.findOne({email: email})
@@ -48,21 +40,41 @@ const register = (req, res)=> {
             const user = new usermodel({
                 firstname, lastname, email,
                 password: hashedp, 
-                phone, dob, pic, cohort, course, class_No
+                phone, dob, course
             })
 
             user.save()
             .then(user=> {
-                transporter.sendMail({
-                    from: "omotukabusayo22@gmail.com",
-                    to: user.email, 
-                    subject: "Excella Registration",
-                    html: `Hello ${user.firstname} ${user.lastname} You have successfully register for one of excella course` 
+                //Apply nodemailerMiddleware to the request object
+                emailMiddleware(req, res, ()=> {
+                    //Send email to user for successful registration
+                    req.sendEmail({
+                        from: "omotukabusayo22@gmail.com",
+                        to: user.email, 
+                        subject: "Excella Registration",
+                        html: `Hello ${user.firstname} ${user.lastname} You have successfully register for one of excella course` 
+                    })
+
+                    //send email notification to admin
+                    req.sendEmail({
+                        from: "omotukabusayo22@gmail.com",
+                        to: 'arairegold1@gmail.com',
+                        subject: "New Registration",
+                        html: `A new user has registered for ${user.course}:
+                        Name: ${user.firstname} ${user.lastname}
+                        Email: ${user.email}
+                        Please activate the account.`
+                    })
+
+                    res.json({mssage: 'Registration successful. Admin approval required.'})
                 })
-                res.json({message: "saved successfully"})
+
+               
+                
             })
             .catch(err=> {
                 console.log(err)
+                res.status(500).json({error: 'Internal server error'})
             })
         })
 
@@ -74,39 +86,55 @@ const register = (req, res)=> {
 }
 
 
+
+//Login students
 const login = (req, res) => {
-//Get email & password from req.body
-const {email, password} = req.body
-console.log(req.body)
+    // Get email & password from req.body
+    const { email, password } = req.body;
 
-//Login validation. check for correct email/password
-if(!email || !password){
-    return res.status(422).json({error: "Please add email or password"})
-}
-
-//Find email/pass from the db
-usermodel.findOne({email: email})
-.then(savedUser=> {
-    if(!savedUser){
-        return res.status(422).json({error: "Invalid Email or password"})
+    // Login validation. Check for correct email/password
+    if (!email || !password) {
+        return res.status(422).json({ error: "Please add email or password" });
     }
-    bcrypt.compare(password, savedUser.password)
-    .then(doMatch=> {
-        if(doMatch){
 
-            const token = jwt.sign({_id: savedUser._id}, process.env.JWT_SECRET)
-            const {_id, firstname, lastname, email, pic, isAdmin, phone, password, class_No, course, cohort, } = savedUser;
-            res.json({token, user:{_id, course, firstname, pic, lastname, class_No, email, pic, isAdmin, cohort, phone, password}})
-        }else{
-            return res.status(422).json({error: "Invalid Email or password"})
-        }
-    })
-    .catch(err=> {
-        console.log(err)
-    })
-})
+    // Find email/pass from the db
+    usermodel.findOne({ email: email })
+        .then(savedUser => {
+            if (!savedUser) {
+                return res.status(422).json({ error: "Invalid Email or password" });
+            }
 
-}
+            // Log the value of isActive to the console
+            console.log('isActive:', savedUser.isActive);
+
+            // Check if the student account is active
+            if (!savedUser.isActive) {
+                return res.status(403).json({ error: "Account not yet activated by the admin. Please wait for activation." });
+            }
+
+            bcrypt.compare(password, savedUser.password)
+                .then(doMatch => {
+                    if (doMatch) {
+                        // Generate a JWT token for the logged-in student
+                        const token = jwt.sign({ _id: savedUser._id }, process.env.JWT_SECRET);
+
+                        // Extract relevant user information
+                        const { _id, firstname, lastname, email, phone, password, course, cohort } = savedUser;
+
+                        // Send the token and user information in the response
+                        res.json({ token, user: { _id, course, firstname, lastname, email, cohort, phone, password } });
+                    } else {
+                        return res.status(422).json({ error: "Invalid Email or password" });
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        })
+        .catch(err => {
+            console.log(err);
+        });
+};
 
 
 

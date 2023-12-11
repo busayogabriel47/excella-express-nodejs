@@ -3,79 +3,73 @@ const router = express.Router()
 const addTrainer = require('../Model/addTrainer')
 const addStudent = require('../Model/addStudent')
 const bcrypt = require('bcrypt');
-const nodemailer = require('nodemailer');
-const sendGridTransport = require('nodemailer-sendgrid-transport')
+const emailMiddleware = require('../middleware/emailMiddleware')
 const env = require('dotenv');
 const jwt = require("jsonwebtoken");
 // const { DatePicker } = require('antd');
 
 env.config()
 
-const transporter = nodemailer.createTransport(
-    sendGridTransport({
-        auth: {
-            api_key: "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"
-        }
-    })
-)
+
+
+
 
 
 
 //Register
 
-const register = (req, res)=> {
-    //1. Get all input from req.body
-    const {firstname, 
-        lastname, email, 
-        password, phone, dob, employeeid, files,} = req.body
-
-    // //2. backend validation
-    // if(!firstname || !lastname || !email || !password || !age || !gender || !address
-    //     || !phone || !course || !dob || !isAdmin || !cohort || !picture){
-    //         return res.status(422).json({error: "All fields are required!"})
-    //     }
-
-    //3. Check for existing email
-    addTrainer.findOne({email: email})
-    .then((savedUser)=> {
-        if(savedUser){
-            return res.status(422).json({error: "User already exist with that email. thanks!"})
+const register = (req, res) => {
+    const { firstname, lastname, email, password, dob, phone } = req.body;
+  
+    if (!email || !password || !firstname || !lastname || !dob || !phone) {
+      return res.status(422).json({ error: "Please add all the required fields" });
+    }
+  
+    addTrainer.findOne({ email: email })
+      .then((existingTrainer) => {
+        if (existingTrainer) {
+          return res.status(422).json({ error: "Trainer already exists with that email" });
         }
-
-    //4. Proceed to hash password and create user
-        bcrypt.genSalt(12)
-        .then(salt => {
-            console.log('Salt:', salt)
-            return bcrypt.hash(password, salt).then(hashedp => {
-                const user = new addTrainer({
-                    firstname, lastname, email,
-                    password: hashedp, 
-                    phone, dob, employeeid, files
-                })
-    
-                user.save()
-                .then(user=> {
-                    transporter.sendMail({
-                        from: "omotukabusayo22@gmail.com",
-                        to: user.email, 
-                        subject: "Excella Registration",
-                        html: `Hello ${user.firstname} ${user.lastname} You have successfully register for one of excella course` 
-                    })
-                    res.json({message: "saved successfully"})
-                })
-                .catch(err=> {
-                    console.log(err)
-                })
-            })
-            })
-        })
-
-       
-    .catch(err=> {
-        console.log(err)
-    })
-    
-}
+  
+        bcrypt.hash(password, 12)
+          .then(hashedPassword => {
+            const newTrainer = new addTrainer({
+              email,
+              firstname,
+              lastname,
+              password: hashedPassword,
+              dob,
+              phone
+            });
+  
+            newTrainer.save()
+              .then(trainer => {
+                // Send signup successful email to trainer
+                emailMiddleware({
+                  to: trainer.email,
+                  subject: "Trainer Registration",
+                  html: `Hello ${trainer.firstname} ${trainer.lastname}, 
+                    You have successfully registered as a trainer. 
+                    Please wait for admin activation to access the dashboard.`
+                });
+  
+                res.json({ message: "Trainer registration successful" });
+              })
+              .catch(err => {
+                console.log(err);
+                res.status(500).json({ error: "Internal server error" });
+              });
+          })
+          .catch(err => {
+            console.log(err);
+            res.status(500).json({ error: "Internal server error" });
+          });
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(500).json({ error: "Internal server error" });
+      });
+  };
 
 
 const login = (req, res) => {
@@ -94,6 +88,13 @@ addTrainer.findOne({email: email})
     if(!savedUser){
         return res.status(422).json({error: "Invalid Email or password"})
     }
+
+    // Check if the trainer account is active
+    if (!savedUser.isActive) {
+      return res.status(403).json({ error: "Account not yet activated by the admin. Please wait for activation." });
+  }
+
+
     bcrypt.compare(password, savedUser.password)
     .then(doMatch=> {
         if(doMatch){

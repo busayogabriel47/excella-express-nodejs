@@ -10,19 +10,12 @@ let userSchema = new Schema({
     dob: {type: String},
     course: {type: String},
     phone: {type: Number},
-    cohort: {type: String},
-    class_No:{type: String},
-    isAdmin: {
-        type: Boolean,
-        default: false
+    role: {
+        type: String,
+        default: 'student',
     },
-    attdenList:[],
-    markList:[],
-    pList:[],
-    pic:{
-     type:String,
-     default:"https://res.cloudinary.com/dvfpkko1z/image/upload/v1589016219/exwm2axhjign3pmawzlv.png"
-    }
+    cohort: {type: mongoose.Schema.Types.ObjectId, ref: 'Cohort'},
+    isActive: {type: Boolean, default: true}
 })
 
 
