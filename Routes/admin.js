@@ -1,7 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const create = require('../controller/admin')
-
+const adminAuth = require("../middleware/adminLogin")
+const getPendingStudents = require("../controller/AdminActivateController/Getpendingstudent")
 
 
 
@@ -9,7 +10,8 @@ const create = require('../controller/admin')
 router.post('/adminReg', create.regAdmin)
 
 
-router.post('/adminSignin', create.loginAdmin)
+router.post('/adminSignin', create.loginAdmin, getPendingStudents)
+router.get('/pending-students', adminAuth, )
 
 
 // router.put('/updatepic',requireLogin,(req,res)=>{
