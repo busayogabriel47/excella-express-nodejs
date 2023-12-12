@@ -14,7 +14,7 @@ let userSchema = new Schema({
         type: String,
         default: 'student',
     },
-    cohort: {type: mongoose.Schema.Types.ObjectId, ref: 'Cohort'},
+    cohorts: [{type: mongoose.Schema.Types.ObjectId, ref: 'Cohort'}],
     isActive: {type: Boolean, default: true}
 })
 
