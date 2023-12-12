@@ -119,7 +119,7 @@ const login = (req, res) => {
                         const token = jwt.sign({ _id: savedUser._id }, process.env.JWT_SECRET);
 
                         // Extract relevant user information
-                        const { _id, firstname, lastname, email, phone, password, course, cohort } = savedUser;
+                        const { _id, firstname, lastname, email, phone, password, course, cohort, isActive } = savedUser;
 
                         // Send the token and user information in the response
                         res.json({ token, user: { _id, course, firstname, lastname, email, cohort, phone, password, isActive } });
