@@ -21,6 +21,7 @@ const blog = require('./Routes/blog')
 const fileUploads = require('./Routes/upload');
 const emailMiddleware = require('./middleware/emailMiddleware');
 const trainerDashboardbRoute = require ('./Routes/addTrainer');
+const activateStudent = require('./Routes/AdminActivate/ActivateStudent')
 
 const app = express()
 
@@ -47,6 +48,7 @@ app.use('/api/', allAction);
 app.use('/api/', fileUploads)
 app.use('/api/', userDetails)
 app.use('/api/', trainerDashboardbRoute)
+app.use('/api/', activateStudent)
 
 
 // const newCohort = new cohort({

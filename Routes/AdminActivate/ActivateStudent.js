@@ -7,3 +7,5 @@ const {activateStudent} = require('../../controller/AdminActivateController/Stud
 //Route to activate a student account
 
 router.put('/activate/:studentId', activateStudent)
+
+module.exports = router

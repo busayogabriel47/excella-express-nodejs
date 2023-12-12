@@ -18,4 +18,4 @@ const activateStudent = (req, res) => {
   };
 
 
-  module.exports = activateStudent;
+  module.exports = {activateStudent};
