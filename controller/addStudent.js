@@ -40,7 +40,7 @@ const register = (req, res)=> {
             const user = new usermodel({
                 firstname, lastname, email,
                 password: hashedp, 
-                phone, dob, course, isActive
+                phone, dob, course, isActive, cohort
             })
 
             user.save()
