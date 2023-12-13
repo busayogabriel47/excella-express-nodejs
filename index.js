@@ -23,6 +23,7 @@ const emailMiddleware = require('./middleware/emailMiddleware');
 const trainerDashboardbRoute = require ('./Routes/addTrainer');
 const activateStudent = require('./Routes/AdminActivate/ActivateStudent')
 const createCohot = require("./protectedRoute/cohortRoute")
+const fetchCohorts = require('./Routes/fetchCohort')
 
 const app = express()
 
@@ -51,6 +52,7 @@ app.use('/api/', userDetails)
 app.use('/api/', trainerDashboardbRoute)
 app.use('/api/', activateStudent)
 app.use('/api/', createCohot)
+app.use('/api/', fetchCohorts)
 
 
 // const newCohort = new cohort({

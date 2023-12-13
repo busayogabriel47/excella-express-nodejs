@@ -2,14 +2,15 @@ const addStudent = require("../../Model/addStudent");
 const emailMiddleware = require("../../middleware/emailMiddleware");
 
 
-
 const activateStudent = async(req, res) => {
     const { studentId } = req.params;
+    const {cohortId} = req.body;
   
     try {
+
       const updatedStudent = await addStudent.findByIdAndUpdate(
         studentId,
-        {isActive: true},
+        {isActive: true, cohort: cohortId},//Assign cohort to the student
         {new: true}
       )
 
