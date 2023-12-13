@@ -1,6 +1,6 @@
 const addStudent = require("../../Model/addStudent");
 const emailMiddleware = require("../../middleware/emailMiddleware");
-
+const admin = require("../../Model/admin")
 
 const activateStudent = async(req, res) => {
     const { studentId } = req.params;
@@ -36,9 +36,9 @@ const activateStudent = async(req, res) => {
         from: "omotukabusayo22@gmail.com",
         to: 'arairegold1@gmail.com',
         subject: "New Registration",
-        html: `A new user has registered for ${user.course}:
-        Name: ${user.firstname} ${user.lastname}
-        Email: ${user.email}
+        html: `A new user has registered for ${updatedStudent.course}:
+        Name: ${updatedStudent.firstname} ${updatedStudent.lastname}
+        Email: ${updatedStudent.email}
         Please activate the account.`
     })
 
