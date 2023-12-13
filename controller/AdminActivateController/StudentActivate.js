@@ -27,6 +27,17 @@ const activateStudent = async(req, res) => {
           })
       })
 
+    //send email notification to admin after student account activated
+      req.sendEmail({
+        from: "omotukabusayo22@gmail.com",
+        to: 'arairegold1@gmail.com',
+        subject: "New Registration",
+        html: `A new user has registered for ${user.course}:
+        Name: ${user.firstname} ${user.lastname}
+        Email: ${user.email}
+        Please activate the account.`
+    })
+
       res.json({message: 'Student account activated successfully.'})
     } catch (error) {
       console.error('Error activating student:', error);
