@@ -20,7 +20,7 @@ const register = (req, res)=> {
     const {firstname, 
         lastname, email, 
         password, phone, dob, 
-        course,} = req.body
+        course, isActive} = req.body
 
     //2. backend validation.. Check if all required fields are provided.
     if(!firstname || !lastname || !email || !password || !dob || !phone || !course){
