@@ -5,6 +5,9 @@ const emailMiddleware = require("../../middleware/emailMiddleware");
 const activateStudent = async(req, res) => {
     const { studentId } = req.params;
     const {cohortId} = req.body;
+
+    console.log('Received studentId:', studentId);
+  console.log('Received cohortId:', cohortId);
   
     try {
 
