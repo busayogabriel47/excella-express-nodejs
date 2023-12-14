@@ -35,5 +35,5 @@ function checkFileType(file, cb) {
 
 
 
-const multerMiddlerware = multer({storage: storage})
-module.exports = multerMiddlerware;
+
+module.exports = upload;
