@@ -1,4 +1,5 @@
 const Cohort = require('../Model/cohort');
+const bannerMiddleware = require("../middleware/cohortBanner")
 
 
 //Create cohorts
