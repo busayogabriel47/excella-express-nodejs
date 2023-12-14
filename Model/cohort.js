@@ -6,6 +6,7 @@ const cohortSchema = new Schema({
     formUrl: {type: String, required: true}, 
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
+    banner: {type: String}
 });
 
 

@@ -23,7 +23,7 @@ const emailMiddleware = require('./middleware/emailMiddleware');
 const trainerDashboardbRoute = require ('./Routes/addTrainer');
 const activateStudent = require('./Routes/AdminActivate/ActivateStudent')
 const createCohot = require("./protectedRoute/cohortRoute")
-const fetchCohorts = require('./Routes/fetchCohort')
+const fetchCohorts = require('./Routes/Cohort')
 
 const app = express()
 
