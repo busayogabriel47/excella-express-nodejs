@@ -5,18 +5,21 @@ const bannerMiddleware = require("../middleware/cohortBanner")
 //Create cohorts
 const createCohort = async (req, res) => {
     try {
-        const { name, formUrl, startDate, endDate } = req.body;
-
-        // Validate request data
-        if (!name || !formUrl || !startDate || !endDate) {
-            return res.status(400).json({ error: 'All fields are required.' });
-        }
 
         // Use the bannerMiddleware before processing the request
         bannerMiddleware(req, res, (err) => {
             if (err) {
                 return res.status(400).json({ error: err.message });
             }
+
+        const { name, formUrl, startDate, endDate, banner } = req.body;
+
+
+        // Validate request data
+        if (!name || !formUrl || !startDate || !endDate || !banner) {
+            return res.status(400).json({ error: 'All fields are required.' });
+        }
+
 
             // At this point, the file has been successfully uploaded (if provided)
             
