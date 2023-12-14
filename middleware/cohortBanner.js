@@ -4,7 +4,7 @@ const path = require('path');
 // Set storage engine
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'cohortBanner'); // Define the destination folder for uploads
+        cb(null, 'uploads'); // Define the destination folder for uploads
     },
     filename: function (req, file, cb) {
         cb(null, Date.now() + path.extname(file.originalname)); // Define the filename
@@ -18,7 +18,7 @@ const upload = multer({
     fileFilter: function (req, file, cb) {
         checkFileType(file, cb);
     },
-}).single('cohortBanner'); // 'cohortBanner' should match the field name in your form
+}).single('uploads'); // 'cohortBanner' should match the field name in your form
 
 // Check file type
 function checkFileType(file, cb) {
