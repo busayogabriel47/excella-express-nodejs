@@ -42,14 +42,47 @@ const createCohort = async (req, res) => {
 
 
 //update cohorts
-const updateCohort = async () => {
+const updateCohort = async (req, res) => {
+    try {
+      const { name, formUrl, startDate, endDate } = req.body;
+  
+      // Use the bannerMiddleware before processing the request
+      multerMiddleware(req, res, async (err) => {
+        if (err) {
+          return res.status(400).json({ error: err.message });
+        }
+  
+        // At this point, the file has been successfully uploaded (if provided)
+  
+        const updatedCohort = await Cohort.findByIdAndUpdate(
+          req.params.id,
+          {
+            name,
+            formUrl,
+            startDate,
+            endDate,
+            banner: req.file ? req.file.path : undefined, // Attach the file path if available
+          },
+          { new: true }
+        );
+        res.json(updatedCohort);
+      });
+    } catch (error) {
+      console.error('Error updating cohort:', error);
+      res.status(500).json({ error: 'Internal server error.' });
+    }
+  };
 
+
+//Delete cohorts
+const deleteCohort = async (req, res) => {
+    try {
+        const deletedCohort = await Cohort.findByIdAndRemove(req.params.id)
+        res.json(deletedCohort)
+    } catch (error) {
+        console.error('Error updating cohort:', error);
+        res.status(500).json({ error: 'Internal server error.' });
+    }
 }
 
-
-//update cohorts
-const deleteCohort = async () => {
-    
-}
-
-module.exports = {createCohort}
+module.exports = {createCohort, updateCohort, deleteCohort}
