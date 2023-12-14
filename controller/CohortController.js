@@ -1,25 +1,23 @@
 const Cohort = require('../Model/cohort');
-const bannerMiddleware = require("../middleware/cohortBanner")
 
 
 //Create cohorts
 const createCohort = async (req, res) => {
     try {
 
-        // Use the bannerMiddleware before processing the request
-        bannerMiddleware(req, res, (err) => {
-            if (err) {
-                return res.status(400).json({ error: err.message });
-            }
+        console.log('Received cohort creation request:', req.body);
 
-        const { name, formUrl, startDate, endDate, banner } = req.body;
+
+        const { name, formUrl, startDate, endDate} = req.body;
 
 
         // Validate request data
-        if (!name || !formUrl || !startDate || !endDate || !banner) {
+        if (!name || !formUrl || !startDate || !endDate) {
             return res.status(400).json({ error: 'All fields are required.' });
         }
 
+
+        console.log('Cohort data after bannerMiddleware:', req.body);
 
             // At this point, the file has been successfully uploaded (if provided)
             
@@ -33,9 +31,8 @@ const createCohort = async (req, res) => {
             });
 
             // Save the cohort to the Database
-            const savedCohort = newCohort.save();
+            const savedCohort = await newCohort.save();
             res.status(201).json({ message: 'Cohort created successfully.', cohort: savedCohort });
-        });
     } catch (error) {
         console.error('Error creating cohort:', error);
         res.status(500).json({ error: 'Internal server error.' });
