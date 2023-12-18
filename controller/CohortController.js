@@ -1,5 +1,5 @@
 const Cohort = require('../Model/cohort');
-
+const multerMiddleware = require("../middleware/cohortBanner")
 
 //Create cohorts
 const createCohort = async (req, res) => {
