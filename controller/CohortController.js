@@ -49,6 +49,7 @@ const updateCohort = async (req, res) => {
       // Use the bannerMiddleware before processing the request
       multerMiddleware(req, res, async (err) => {
         if (err) {
+          console.error('Error uploading file:', err);
           return res.status(400).json({ error: err.message });
         }
   
@@ -65,7 +66,9 @@ const updateCohort = async (req, res) => {
           },
           { new: true }
         );
-        res.json(updatedCohort);
+        res.json({ message: 'Cohort updated successfully', updatedCohort });
+        console.log('Cohort ID:', req.params.id);
+        console.log('Uploaded File:', req.file);
       });
     } catch (error) {
       console.error('Error updating cohort:', error);
