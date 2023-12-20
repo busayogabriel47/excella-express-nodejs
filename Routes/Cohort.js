@@ -7,7 +7,7 @@ const studentAuth = require("../middleware/requireLogin")
 
 
 router.get('/cohorts', fetchAllCohorts);
-router.get("/student/:studentId", studentCohort);
+router.get("/student/:studentId", studentAuth, studentCohort);
 
 
 module.exports = router
