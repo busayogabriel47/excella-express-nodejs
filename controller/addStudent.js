@@ -116,7 +116,7 @@ const login = (req, res) => {
                 .then(doMatch => {
                     if (doMatch) {
                         // Generate a JWT token for the logged-in student
-                        const token = jwt.sign({ _id: savedUser._id }, process.env.JWT_SECRET);
+                        const token = jwt.sign({ _id: savedUser._id, role: savedUser.role}, process.env.JWT_SECRET);
 
                         // Extract relevant user information
                         const { _id, firstname, lastname, email, phone, password, course, cohort, isActive, role } = savedUser;
