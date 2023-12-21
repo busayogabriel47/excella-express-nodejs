@@ -119,10 +119,10 @@ const login = (req, res) => {
                         const token = jwt.sign({ _id: savedUser._id }, process.env.JWT_SECRET);
 
                         // Extract relevant user information
-                        const { _id, firstname, lastname, email, phone, password, course, cohort, isActive } = savedUser;
+                        const { _id, firstname, lastname, email, phone, password, course, cohort, isActive, role } = savedUser;
 
                         // Send the token and user information in the response
-                        res.json({ token, user: { _id, course, firstname, lastname, email, cohort, phone, password, isActive } });
+                        res.json({ token, user: { _id, course, firstname, lastname, email, cohort, phone, password, isActive, role } });
                     } else {
                         return res.status(422).json({ error: "Invalid Email or password" });
                     }
