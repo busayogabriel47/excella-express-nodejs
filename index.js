@@ -56,14 +56,6 @@ app.use('/api/', createCohot)
 app.use('/api/', fetchCohorts)
 
 
-// const newCohort = new cohort({
-//     name: "NCLEX Beginners 1",
-//     formUrl: "outhutheougeoueutoeu"
-// })
-
-// newCohort.save()
-
-
 
 //port
 const port = process.env.PORT || 5000

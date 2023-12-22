@@ -6,7 +6,7 @@ const {createCohort, updateCohort, deleteCohort} = require('../controller/Cohort
 const multerMiddleware = require('../middleware/cohortBanner')
 
 //Endpoint to add cohorts (accessible to admin only)
-router.post('/add-cohort', adminAuth, multerMiddleware, createCohort)
+router.post('/add-cohort', express.static(path.join(__dirname, 'uploads')), adminAuth, multerMiddleware, createCohort)
 router.put('/update-cohort/:id', adminAuth, multerMiddleware, updateCohort)
 router.delete('/delete-cohort/:id', deleteCohort)
 
