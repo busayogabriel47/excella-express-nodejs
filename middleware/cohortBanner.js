@@ -1,7 +1,7 @@
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const cloudinary = require('cloudinary')
+const cloudinary = require('cloudinary').v2
 const dotenv = require('dotenv')
 
 dotenv.config();
@@ -58,7 +58,7 @@ const upload = multer({
       // Upload image to Cloudinary
       const result = await cloudinary.uploader.upload(req.file.buffer.toString('base64'), {
         folder: 'Excella-consult', // Replace with your Cloudinary folder
-        public_id: `${Date.now()}_${req.file.cloudinaryUrl}`,
+        public_id: `${Date.now()}_${req.file.originalname}`,
       });
   
       // Store Cloudinary URL in req.file
@@ -66,6 +66,7 @@ const upload = multer({
   
       next();
     } catch (error) {
+        console.error('Error uploading image to Cloudinary:', error);
       return res.status(500).json({ error: 'Error uploading image to Cloudinary' });
     }
   };
