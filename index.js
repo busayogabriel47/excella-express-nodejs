@@ -24,6 +24,7 @@ const trainerDashboardbRoute = require ('./Routes/addTrainer');
 const activateStudent = require('./Routes/AdminActivate/ActivateStudent')
 const createCohot = require("./protectedRoute/cohortRoute")
 const fetchCohorts = require('./Routes/Cohort')
+const path = require('path')
 
 const app = express()
 
@@ -52,7 +53,7 @@ app.use('/api/', fileUploads)
 app.use('/api/', userDetails)
 app.use('/api/', trainerDashboardbRoute)
 app.use('/api/', activateStudent)
-app.use('/api/', createCohot)
+app.use('/api/', express.static(path.join(__dirname, 'uploads')), createCohot)
 app.use('/api/', fetchCohorts)
 
 
