@@ -6,7 +6,7 @@ const createCohort = async (req, res) => {
     try {
 
       // Access the Cloudinary URL from req.file.cloudinaryUrl
-      const cloudinaryUrl = req.file.cloudinaryUrl;
+      const cloudinaryUrl = req.file ? req.file.cloudinaryUrl : null;
 
         console.log('Received cohort creation request:', req.body);
 
