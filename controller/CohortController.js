@@ -5,17 +5,14 @@ const multerMiddleware = require("../middleware/cohortBanner")
 const createCohort = async (req, res) => {
     try {
 
-      // Access the Cloudinary URL from req.file.cloudinaryUrl
-      const cloudinaryUrl = req.file ? req.file.cloudinaryUrl : null;
-
         console.log('Received cohort creation request:', req.body);
 
 
-        const { name, formUrl, startDate, endDate, banner} = req.body;
+        const { name, formUrl, startDate, endDate} = req.body;
 
 
         // Validate request data
-        if (!name || !formUrl || !startDate || !endDate || !banner) {
+        if (!name || !formUrl || !startDate || !endDate) {
             return res.status(400).json({ error: 'All fields are required.' });
         }
 
@@ -30,7 +27,7 @@ const createCohort = async (req, res) => {
                 formUrl,
                 startDate,
                 endDate,
-                banner: cloudinaryUrl, //Use the Cloudinary URL for the banner
+                banner: req.file ? req.file.path : undefined, // Attach the file path if available
             });
 
             // Save the cohort to the Database
