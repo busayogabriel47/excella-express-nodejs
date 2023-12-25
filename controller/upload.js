@@ -7,14 +7,21 @@ const Router = express.Router();
 
 const postFile = async (req, res) => {
     try {
-      const { title, description } = req.body;
+      const { title, description, cohortId } = req.body;
       const { path, mimetype } = req.file;
+
+      if(!title || !description || !cohortId){
+        return res.status(400).send('All fields are required.')
+      }
+
       const file = new File({
         title,
         description,
         file_path: path,
-        file_mimetype: mimetype
+        file_mimetype: mimetype,
+        cohort: cohortId, //Include cohort ID
       });
+      
       await file.save();
       res.send('file uploaded successfully.');
     } catch (error) {

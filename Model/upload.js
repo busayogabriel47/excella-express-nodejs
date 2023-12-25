@@ -19,6 +19,10 @@ const fileSchema = mongoose.Schema(
     file_mimetype: {
       type: String,
       required: true
+    },
+    cohort: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Cohort',
     }
   },
   {
