@@ -123,6 +123,7 @@ const login = (req, res) => {
 
                         // Send the token and user information in the response
                         res.json({ token, user: { _id, course, firstname, lastname, email, cohort, phone, password, isActive, role } });
+                        res.status(200).json({message: "Login successful!"})
                     } else {
                         return res.status(422).json({ error: "Invalid Email or password" });
                     }
