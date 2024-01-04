@@ -11,45 +11,53 @@ const jwt = require('jsonwebtoken')
 
 
 
-const regAdmin = (req,res)=>{
-    const {firstname,lastname, email,password,phone,city,} = req.body 
- //   console.log(req.body )
-   if(!email || !password || !firstname || !phone || !city){
-      return res.status(422).json({error:"please add all the fields"})
-   }
-   adminModel.findOne({email:email})
-   .then((savedUser)=>{
-       if(savedUser){
-         return res.status(422).json({error:"user already exists with that email"})
-       }
-       bcrypt.hash(password,12)
-       .then(hashedpassword=>{
-             const admin = new adminModel({
-                 email,phone,city,
-                 password:hashedpassword,
-                 firstname,lastname,role
-             })
-     
-             admin.save()
-             .then(user => {
-              emailMiddleware({
-                  from: "omotukabusayo22@gmail.com",
-                  to: user.email,
-                  subject: "Excella registration",
-                  html: "You successfully completed your registration as Admin on Excella",
-              });
-              res.json({ message: "Registration is successful" });
-          })
-             .catch(err=>{
-                 console.log(err)
-             })
-       })
-      
-   })
-   .catch(err=>{
-     console.log(err)
-   })
- }
+const regAdmin = async (req, res) => {
+    try {
+      const { firstname, lastname, email, password, phone, city } = req.body;
+  
+      // Check if required fields are provided
+      if (!email || !password || !firstname || !phone || !city) {
+        return res.status(422).json({ error: "Please add all the fields" });
+      }
+  
+      // Check if the admin already exists with the given email
+      const existingAdmin = await adminModel.findOne({ email });
+  
+      if (existingAdmin) {
+        return res.status(422).json({ error: "User already exists with that email" });
+      }
+  
+      // Hash the password
+      const hashedpassword = await bcrypt.hash(password, 12);
+  
+      // Create a new admin instance
+      const admin = new adminModel({
+        email,
+        phone,
+        city,
+        password: hashedpassword,
+        firstname,
+        lastname,
+        role,
+      });
+  
+      // Save the new admin to the database
+      const user = await admin.save();
+  
+      // Send registration confirmation email
+      await emailMiddleware({
+        from: "omotukabusayo22@gmail.com",
+        to: user.email,
+        subject: "Excella registration",
+        html: "You successfully completed your registration as Admin on Excella",
+      });
+  
+      res.json({ message: "Registration is successful" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  };
 
 
 //Login admin
