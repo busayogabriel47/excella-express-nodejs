@@ -27,8 +27,7 @@ const regAdmin = (req,res)=>{
              const admin = new adminModel({
                  email,phone,city,
                  password:hashedpassword,
-                 firstname,lastname,
-                 pic, role
+                 firstname,lastname,role
              })
      
              admin.save()
