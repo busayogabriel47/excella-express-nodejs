@@ -13,10 +13,10 @@ const jwt = require('jsonwebtoken')
 
 const regAdmin = async (req, res) => {
     try {
-      const { firstname, lastname, email, password, phone, city } = req.body;
+      const { firstname, lastname, email, password, phone, city, role, pic } = req.body;
   
       // Check if required fields are provided
-      if (!email || !password || !firstname || !phone || !city) {
+      if (!email || !password || !firstname || lastname || !phone || !city) {
         return res.status(422).json({ error: "Please add all the fields" });
       }
   
@@ -37,7 +37,7 @@ const regAdmin = async (req, res) => {
         city,
         password: hashedpassword,
         firstname,
-        lastname
+        lastname, role, pic
       });
   
       // Save the new admin to the database
