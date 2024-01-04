@@ -12,9 +12,9 @@ const jwt = require('jsonwebtoken')
 
 
 const regAdmin = (req,res)=>{
-    const {firstname,lastname, email,password,pic,phone,city, role} = req.body 
+    const {firstname,lastname, email,password,phone,city,} = req.body 
  //   console.log(req.body )
-   if(!email || !password || !firstname || !phone || !city || !role){
+   if(!email || !password || !firstname || !phone || !city){
       return res.status(422).json({error:"please add all the fields"})
    }
    adminModel.findOne({email:email})
