@@ -37,8 +37,7 @@ const regAdmin = async (req, res) => {
         city,
         password: hashedpassword,
         firstname,
-        lastname,
-        role,
+        lastname
       });
   
       // Save the new admin to the database
