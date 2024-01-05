@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
     },
     role:{
         type: String,
-        enum: ['trainer', 'admin', "superadmin"]
+        default: 'admin'
     },
     city:{
         type:String,

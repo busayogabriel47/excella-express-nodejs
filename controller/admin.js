@@ -13,7 +13,7 @@ const jwt = require('jsonwebtoken')
 
 const regAdmin = async (req, res) => {
     try {
-      const { firstname, lastname, email, password, phone, city } = req.body;
+      const { firstname, lastname, email, password, phone, city, role, pic } = req.body;
   
     //   // Check if required fields are provided
     //   if (!email || !password || !firstname || lastname || !phone || !city) {
