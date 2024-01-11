@@ -50,14 +50,23 @@ const getAllFiles = async (req, res) => {
 const getSingleFile = async (req, res) => {
     try {
       const file = await File.findById(req.params.id);
+
+      if(!file){
+        return res.status(404).send('File not found.')
+      }
+
+      const filePath = path.resolve(__dirname, '..', file.file_path);
+
       res.set({
         'Content-Type': file.file_mimetype
       });
-      res.sendFile(path.join(__dirname, '..', file.file_path));
+
+     res.sendFile(filePath);
     } catch (error) {
-      res.status(400).send('Error while downloading file. Try again later.');
+      console.error(400).send('Error while downloading file. Try again later.', error);
+      res.status(500).send('Internet server error.');
     }
-  }
+}
 
 
 

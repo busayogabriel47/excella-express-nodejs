@@ -64,7 +64,7 @@ const loginAdmin = (req,res)=>{
     const {email,password} = req.body
     console.log(req.body)
     if(!email || !password){
-       return res.status(422).json({error:"please add email or password"})
+       return res.status(422).json({error:"Please add email or password"})
     }
     adminModel.findOne({email:email})
     .then(savedUser=>{
