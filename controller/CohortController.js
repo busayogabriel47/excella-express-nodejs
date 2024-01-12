@@ -8,11 +8,11 @@ const createCohort = async (req, res) => {
         console.log('Received cohort creation request:', req.body);
 
 
-        const { name, formUrl, startDate, endDate} = req.body;
+        const { name, formUrls, startDate, endDate} = req.body;
 
 
         // Validate request data
-        if (!name || !formUrl || !startDate || !endDate) {
+        if (!name || !startDate || !endDate) {
             return res.status(400).json({ error: 'All fields are required.' });
         }
 
@@ -24,7 +24,7 @@ const createCohort = async (req, res) => {
             // Create new cohort document
             const newCohort = new Cohort({
                 name,
-                formUrl,
+                formUrls: formUrls || [], // Set to an empty array if formUrls is not provided
                 startDate,
                 endDate,
                 banner: req.file ? req.file.path : undefined, // Attach the file path if available
