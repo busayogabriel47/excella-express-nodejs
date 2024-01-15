@@ -26,7 +26,7 @@ const studentCohort = async(req, res) => {
                 name: student.cohort.name,
                 startDate: student.cohort.startDate,
                 endDate: student.cohort.endDate,
-                formUrl: student.cohort.formUrl,
+                formUrls: student.cohort.formUrls,
                 banner: student.cohort.banner
             }
         ]
