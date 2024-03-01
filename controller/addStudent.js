@@ -20,7 +20,7 @@ const register = (req, res)=> {
     const {firstname, 
         lastname, email, 
         password, phone, dob, 
-        course, isActive, cohort} = req.body
+        course, isActive, cohort, otp} = req.body
 
     //2. backend validation.. Check if all required fields are provided.
     if(!firstname || !lastname || !email || !password || !dob || !phone || !course){
@@ -40,7 +40,7 @@ const register = (req, res)=> {
             const user = new usermodel({
                 firstname, lastname, email,
                 password: hashedp, 
-                phone, dob, course, isActive, cohort
+                phone, dob, course, isActive, cohort, otp
             })
 
             user.save()

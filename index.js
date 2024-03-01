@@ -25,6 +25,11 @@ const activateStudent = require('./Routes/AdminActivate/ActivateStudent')
 const deactivateStuent = require('./Routes/AdminActivate/deactivateStudent')
 const createCohot = require("./protectedRoute/cohortRoute")
 const fetchCohorts = require('./Routes/Cohort')
+const forgetPass = require('./Routes/forgetPass')
+const resetPass = require('./Routes/resetPass')
+const newPassword = require('./Routes/newPassword')
+
+
 const path = require('path')
 
 const app = express()
@@ -57,6 +62,10 @@ app.use('/api/', activateStudent)
 app.use('/api/', createCohot)
 app.use('/api/', fetchCohorts)
 app.use('/api/', deactivateStuent)
+app.use('/api/', forgetPass)
+app.use('/api/', resetPass)
+app.use('/api/', newPassword)
+
 
 
 //port

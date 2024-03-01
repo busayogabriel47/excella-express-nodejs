@@ -15,6 +15,7 @@ let userSchema = new Schema({
         default: 'student',
     },
     cohort: {type: mongoose.Schema.Types.ObjectId, ref: 'Cohort'},
+    otp: { type: Number },
     isActive: {type: Boolean, default: false}
 })
 
