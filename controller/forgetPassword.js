@@ -34,6 +34,11 @@ const transporter = nodemailer.createTransport({
 
       const token = jwt.sign({ userId: user._id, otp }, process.env.JWT_SECRET, { expiresIn: '1h' });
       console.log("Generated Token:", token)
+
+    //Save OTP to user document
+    user.otp = otp
+    await user.save();
+      
   
       const mailOptions = {
         from: 'omotukabusayo22@gmail.com',

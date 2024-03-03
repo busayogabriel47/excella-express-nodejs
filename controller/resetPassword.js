@@ -9,7 +9,6 @@ dotenv.config();
 const resetPassword = async(req, res) => {
 
     const {otp} = req.body;
-    console.log(otp)
 
     try{
         const decoded = jwt.verify(otp, process.env.JWT_SECRET);

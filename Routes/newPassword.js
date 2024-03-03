@@ -3,6 +3,6 @@ const router = express.Router();
 const { resetPassword } = require('../controller/newPassword');
 
 // Route to handle password reset
-router.post('/reset-password', resetPassword);
+router.post('/new-password', resetPassword);
 
 module.exports = router;
